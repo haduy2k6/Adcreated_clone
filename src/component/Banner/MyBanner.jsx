@@ -2,19 +2,20 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom"; // Add this import
 import FeaturesMenu from "./FeaturesMenu";
 import SolutionsMenu from "./SolutionsMenu";
+import { SignPage } from "../login/Login";
 
 const Options = styled.li`
   padding: 5px 10px;
   list-style-type: none;
-  color: ${(props) => (props.$home ? "#df277b" : "#383838")};
+  color: ${(props) => (props.$home ? "#df277b" : "rgb(51, 51, 51)")};
   cursor: pointer;
   position: relative;
-
   font-weight: 0.875rem;
-    ${({ active }) =>
-    (active === 'features' )&&
+  ${({ active }) =>
+    active === "features" &&
     `
     border-radius: 12px;
     background-color: #eae1e5;
@@ -23,8 +24,8 @@ const Options = styled.li`
         transition: transform 0.3s ease;
       }
     `}
-     ${({ active2 }) =>
-    (active2 === 'solutions' )&&
+  ${({ active2 }) =>
+    active2 === "solutions" &&
     `
     border-radius: 12px;
     background-color: #eae1e5;
@@ -35,7 +36,7 @@ const Options = styled.li`
     `}
 `;
 
-const HighOptions = styled(Options)`
+export const HighOptions = styled(Options)`
   padding: 10px 25px;
   font-weight: bolder;
   display: flex;
@@ -46,12 +47,20 @@ const HighOptions = styled(Options)`
   box-shadow: ${(props) =>
     props.$highoption ? "none" : "0 15px 30px -1px rgba(0, 0, 0, 0.2)"};
 
-  &:hover {
+  &:hover{
     background-color: ${(props) =>
       props.$highoption ? "#df277b" : "#ffffff"};
     color: ${(props) => (props.$highoption ? "#ffffff" : "#383838")};
     box-shadow: 2px 19px 39px -10px #df277b;
   }
+  &:hover {StyledLink}{
+  color:${(props)=>(props.$h ? "#ffff":"#383838")};
+  }
+`;
+export const Image = styled.img`
+  width: auto;
+  height: ${(props) => (props.$google ? "27px" : "50px")};
+  object-fit: contain;
 `;
 
 const DivUl = styled.ul`
@@ -79,22 +88,26 @@ const Div = styled.div`
   width: fit-content;
   box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
 `;
-
-const Image = styled.img`
-  width: auto;
-  height: ${(props) => (props.$google ? "27px" : "50px")};
-  object-fit: contain;
+const StyleLink= styled(Link)`
+    color: ${(props)=>(props.$h ? "#df277b":"#383838")};
+    font-weight: 900;
+     text-decoration: non;
+     font-size:16px;
+    
+    :hover{
+      color:${(props)=>(props.$h ? "#ffff":"#383838")};
+    }
 `;
-
 function MyHighOption() {
   return (
     <DivUl>
       <Options>Login</Options>
       <HighOptions $highoption={true} $home={true}>
-        Try For Free Now
+ 
+        <StyleLink to="/login" $h={true}>Try For Free Now</StyleLink>
       </HighOptions>
       <HighOptions>
-        Start Free With <Image $google={true} src="/google.svg" />
+        <StyleLink to="/login" >Sign up With</StyleLink> <Image $google={true} src="/google.svg" />
       </HighOptions>
     </DivUl>
   );
@@ -108,7 +121,6 @@ export default function MyBanner() {
   const [bannerRect, setBannerRect] = useState({ width: 0, left: 0, bottom: 0 });
   const [activeMenu, setActiveMenu] = useState(null);
 
-  // Lấy kích thước + vị trí banner khi mount và khi resize
   useEffect(() => {
     const updateRect = () => {
       if (sizeBanner.current) {
@@ -121,7 +133,6 @@ export default function MyBanner() {
     return () => window.removeEventListener("resize", updateRect);
   }, []);
 
-  // Đóng menu khi click ra ngoài
   useEffect(() => {
     const handler = (e) => {
       if (
@@ -143,9 +154,7 @@ export default function MyBanner() {
         <Image src="./logoo.png" alt="logo" />
         <DivUl>
           <Options $home={true}>Home</Options>
-
           <Options
-
             ref={featuresBtnRef}
             onClick={() =>
               setActiveMenu((prev) => (prev === "features" ? null : "features"))
@@ -154,7 +163,6 @@ export default function MyBanner() {
           >
             Features <FontAwesomeIcon icon={faChevronDown} size="xs" />
           </Options>
-
           <Options
             ref={solutionsBtnRef}
             onClick={() =>
@@ -164,7 +172,6 @@ export default function MyBanner() {
           >
             Solutions <FontAwesomeIcon icon={faChevronDown} size="xs" />
           </Options>
-
           <Options>Enterprise</Options>
           <Options>Pricing</Options>
         </DivUl>
@@ -176,7 +183,7 @@ export default function MyBanner() {
           maxWidth={bannerRect.width + "px"}
           style={{
             position: "absolute",
-            top: bannerRect.bottom +12+ "px",
+            top: bannerRect.bottom + 12 + "px",
             left: bannerRect.left + "px",
           }}
         />
@@ -187,8 +194,8 @@ export default function MyBanner() {
           maxWidth={bannerRect.width + "px"}
           style={{
             position: "absolute",
-            top: bannerRect.bottom +10+ "px",
-            left: bannerRect.left+150 + "px",
+            top: bannerRect.bottom + 10 + "px",
+            left: bannerRect.left + 150 + "px",
           }}
         />
       )}
